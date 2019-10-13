@@ -25,16 +25,16 @@ public class StellarSbtApplication {
 	@Bean
 	public CorsFilter corsFilter() {
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-		CorsConfiguration config = new CorsConfiguration();
-		config.setAllowCredentials(true);
-		config.addAllowedOrigin("*");
-		config.addAllowedHeader("*");
-		config.addAllowedMethod("OPTIONS");
-		config.addAllowedMethod("GET");
-		config.addAllowedMethod("POST");
-		config.addAllowedMethod("PUT");
-		config.addAllowedMethod("DELETE");
-		source.registerCorsConfiguration("/**", config);
+		CorsConfiguration configs = new CorsConfiguration();
+		configs.setAllowCredentials(true);
+		configs.addAllowedOrigin("*");
+		configs.addAllowedHeader("*");
+		configs.addAllowedMethod("OPTIONS");
+		configs.addAllowedMethod("GET");
+		configs.addAllowedMethod("POST");
+		configs.addAllowedMethod("PUT");
+		configs.addAllowedMethod("DELETE");
+		source.registerCorsConfiguration("/**", configs);
 		return new CorsFilter(source);
 	}
 

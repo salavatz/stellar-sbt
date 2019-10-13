@@ -1,21 +1,30 @@
-<form name="form" (ngSubmit)="f.form.valid && login()" #f="ngForm" novalidate>
-  <div [ngClass]="{ 'has-error': f.submitted && !username.valid }">
-    <label for="username">Username</label>
-    <input type="text"
-           name="username" [(ngModel)]="model.name"
-           #username="ngModel" required />
-    <div *ngIf="f.submitted
-          && !username.valid">Username is required</div>
+<div class="example-container mat-elevation-z8">
+  <div class="example-loading-shade"
+       *ngIf="isLoadingResults">
+    <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
   </div>
-  <div [ngClass]="{ 'has-error': f.submitted && !password.valid }">
-    <label for="password">Password</label>
-    <input type="password"
-           name="password" [(ngModel)]="model.password"
-           #password="ngModel" required />
-    <div *ngIf="f.submitted
-          && !password.valid">Password is required</div>
-  </div>
-  <div>
-    <button [disabled]="loading">Login</button>
-  </div>
-</form>
+  <mat-card class="example-card">
+    <form [formGroup]="loginForm" (ngSubmit)="onFormSubmit(loginForm.value)">
+      <mat-form-field class="example-full-width">
+        <input matInput type="email" placeholder="Email" formControlName="email"
+               [errorStateMatcher]="matcher">
+        <mat-error>
+          <span *ngIf="!loginForm.get('email').valid && loginForm.get('email').touched">Please enter your email</span>
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field class="example-full-width">
+        <input matInput type="password" placeholder="Password" formControlName="password"
+               [errorStateMatcher]="matcher">
+        <mat-error>
+          <span *ngIf="!loginForm.get('password').valid && loginForm.get('password').touched">Please enter your password</span>
+        </mat-error>
+      </mat-form-field>
+      <div class="button-row">
+        <button type="submit" [disabled]="!loginForm.valid" mat-flat-button color="primary">Login</button>
+      </div>
+      <div class="button-row">
+        <button type="button" mat-flat-button color="primary" (click)="register()">Register</button>
+      </div>
+    </form>
+  </mat-card>
+</div>

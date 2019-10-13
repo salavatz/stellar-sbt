@@ -1,17 +1,16 @@
 package com.sbt.stellar.entities;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 @Table(name = "users_")
 public class User {
     @Id
@@ -28,13 +27,13 @@ public class User {
     @Column(name = "password")
     private String password;
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                '}';
-    }
+    @Column(name = "role")
+    @Enumerated(EnumType.STRING)
+    private Role roles;
+
+    @Column(name = "publicKey")
+    private String publicKey;
+
+    @Column(name = "secretKey")
+    private String secretKey;
 }

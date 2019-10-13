@@ -1,4 +1,4 @@
-package com.sbt.stellar.config;
+package com.sbt.stellar.configs;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

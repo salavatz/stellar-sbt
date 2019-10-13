@@ -1,8 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import {ActivatedRoute, Router} from "@angular/router";
-import {HttpClient} from "@angular/common/http";
-import {Observable} from "rxjs";
-import {User} from "../model/user";
+import { FormControl, FormGroupDirective, FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
+import { ErrorStateMatcher } from '@angular/material/core';
+import {Router} from "@angular/router";
+import {AuthenticationService} from "../service/authentication.service";
+
+/** Error when invalid control is dirty, touched, or submitted. */
+export class MyErrorStateMatcher implements ErrorStateMatcher {
+  isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
+    const isSubmitted = form && form.submitted;
+    return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted));
+  }
+}
 
 @Component({
   selector: 'app-login',
@@ -10,34 +18,36 @@ import {User} from "../model/user";
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-  model: User = new User();
 
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private http: HttpClient
-  ) { }
+  loginForm: FormGroup;
+  email = '';
+  password = '';
+  matcher = new MyErrorStateMatcher();
+  isLoadingResults = false;
+
+  constructor(private formBuilder: FormBuilder, private router: Router, private authenticationService: AuthenticationService) { }
 
   ngOnInit() {
-    sessionStorage.setItem('token','');
+    this.loginForm = this.formBuilder.group({
+      'email' : [null, Validators.required],
+      'password' : [null, Validators.required]
+    });
   }
 
-  login(){
-    let url = 'http://localhost:8080/login';
-    let result = this.http.post<Observable<boolean>>(url, {
-      name: this.model.name,
-      password: this.model.password
-    }).subscribe(isValid => {
-      if (isValid) {
-        sessionStorage.setItem(
-          'token',
-          btoa(this.model.name + ':' + this.model.password)
-        );
-        this.router.navigate(['']);
-      } else {
-        alert("Authentication failed.");
-      }
-    });
+  onFormSubmit(form: NgForm) {
+    this.authenticationService.login(form)
+      .subscribe(res => {
+        if (res.token) {
+          sessionStorage.setItem('token', res.token);
+          this.router.navigate(['']);
+        }
+      }, (err) => {
+        console.log(err);
+      });
+  }
+
+  register() {
+    this.router.navigate(['register']);
   }
 
 }

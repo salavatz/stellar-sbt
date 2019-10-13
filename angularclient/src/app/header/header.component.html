@@ -1,15 +1,51 @@
-<header>
-  <nav class ="navbar navbar-expand-md navbar-dark bg-dark">
-    <div><a href="/" class="navbar-brand">Stellar</a></div>
+<!--<header>-->
+  <!--<nav class ="navbar navbar-expand-md navbar-dark bg-dark">-->
+    <!--<div><a href="/" class="navbar-brand">Stellar</a></div>-->
 
-    <ul class="navbar-nav">
+    <!--<ul class="navbar-nav">-->
 
-      <li><a *ngIf="loginService.isUserLoggedIn()" routerLink="/transactions" class="nav-link">Transactions</a></li>
-      <li><a *ngIf="loginService.isUserLoggedIn()" routerLink="/users" class="nav-link">Balance</a></li>
-      <li><a *ngIf="loginService.isUserLoggedIn()" routerLink="/users" class="nav-link">History</a></li>
-      <li><a *ngIf="!loginService.isUserLoggedIn()" routerLink="/login" class="nav-link">Login</a></li>
-      <li><a *ngIf="loginService.isUserLoggedIn()" routerLink="/logout" class="nav-link">LogOut</a></li>
+      <!--<li><a *ngIf="authenticationService.isLoggedIn" routerLink="/transactions" class="nav-link">Transactions</a></li>-->
+      <!--<li><a *ngIf="authenticationService.isLoggedIn" routerLink="/users" class="nav-link">Balance</a></li>-->
+      <!--<li><a *ngIf="authenticationService.isLoggedIn" routerLink="/users" class="nav-link">History</a></li>-->
+      <!--<li><a *ngIf="!authenticationService.isLoggedIn" routerLink="/login" class="nav-link">Login</a></li>-->
+      <!--<li><a *ngIf="authenticationService.isLoggedIn" routerLink="/logout" class="nav-link">LogOut</a></li>-->
 
+    <!--</ul>-->
+  <!--</nav>-->
+<!--</header>-->
+
+<mat-toolbar color="primary">
+  <div fxHide.gt-xs>
+    <button mat-icon-button (click)="onToggleSidenav()">
+      <mat-icon>menu</mat-icon>
+    </button>
+  </div>
+  <div>
+    <a routerLink="/">Stellar</a>
+  </div>
+  <div fxFlex fxLayout fxLayoutAlign="end" fxHide.xs>
+    <ul fxLayout fxLayoutGap="15px" class="navigation-items">
+      <li>
+        <a *ngIf="authenticationService.isLoggedIn" routerLink="/transactions">Transactions</a>
+      </li>
+      <li>
+        <a *ngIf="authenticationService.isLoggedIn" routerLink="/users">Balance</a>
+      </li>
+      <li>
+        <a *ngIf="authenticationService.isLoggedIn" routerLink="/users">History</a>
+      </li>
+      <li>
+        <a *ngIf="!authenticationService.isLoggedIn" routerLink="/login">Login</a>
+      </li>
+      <li>
+        <a *ngIf="authenticationService.isLoggedIn" routerLink="/logout">LogOut</a>
+      </li>
+      <li>
+        <a *ngIf="authenticationService.isLoggedIn" routerLink="/user/add_account">Add account</a>
+      </li>
+      <li>
+        <a *ngIf="authenticationService.isLoggedIn" routerLink="/user/account">Account</a>
+      </li>
     </ul>
-  </nav>
-</header>
+  </div>
+</mat-toolbar>
