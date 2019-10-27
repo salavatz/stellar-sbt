@@ -2,6 +2,7 @@ import {Component} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {Transaction} from "../model/transaction";
 import {TransactionService} from "../service/transaction.service";
+import {MyErrorStateMatcher} from "../login/login.component";
 
 @Component({
   selector: 'app-transactions',
@@ -11,6 +12,7 @@ import {TransactionService} from "../service/transaction.service";
 export class TransactionsComponent {
 
   transaction: Transaction;
+  matcher = new MyErrorStateMatcher();
 
   constructor(private route: ActivatedRoute, private router: Router, private transactionService: TransactionService) {
     this.transaction = new Transaction();

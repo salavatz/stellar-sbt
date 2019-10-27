@@ -38,11 +38,11 @@ export class RegisterComponent implements OnInit {
 
   onFormSubmit(form: NgForm) {
     this.authenticationService.register(form)
-      .subscribe(res => {
+      .subscribe(data => {
         this.router.navigate(['login']);
-      }, (err) => {
-        console.log(err);
-        alert(err.error);
+      }, error => {
+        console.log(error);
+        alert(error.error.message);
       });
   }
 

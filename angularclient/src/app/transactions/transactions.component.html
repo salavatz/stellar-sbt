@@ -1,19 +1,24 @@
-<div class="card my-5">
-  <div class="card-body">
+<div class="example-container">
+  <mat-card class="example-card">
     <form (ngSubmit)="onSubmit()" #transactionForm="ngForm">
-      <div class="form-group">
-        <label for="recipient">Recipient</label>
-        <input type="text" [(ngModel)]="transaction.recipient" class="form-control" id="recipient" name="recipient" placeholder="Enter recipient"
-               required #recipient="ngModel">
+      <mat-form-field class="example-full-width">
+        <input matInput type="text" [(ngModel)]="transaction.recipient" name="recipient" placeholder="Enter recipient"
+               #recipient="ngModel" [errorStateMatcher]="matcher" required>
+        <mat-error>
+          <span *ngIf="!recipient.valid && recipient.touched">Please enter recipient</span>
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field class="example-full-width">
+        <input matInput type="password" [(ngModel)]="transaction.amount" name="amount" placeholder="Enter your amount"
+               #amount="ngModel" [errorStateMatcher]="matcher" required>
+        <mat-error>
+          <span *ngIf="!amount.valid && amount.touched">Please enter amount</span>
+        </mat-error>
+      </mat-form-field>
+      <div *ngIf="error" class="alert alert-danger">{{error}}</div>
+      <div class="button-row">
+        <button type="submit" [disabled]="!transactionForm.form.valid" mat-flat-button color="primary">Send</button>
       </div>
-      <div [hidden]="!recipient.pristine" class="alert alert-danger">Recipient is required</div>
-      <div class="form-group">
-        <label for="amount">Amount</label>
-        <input type="text" [(ngModel)]="transaction.amount" class="form-control" id="amount" name="amount" placeholder="Enter your amount"
-               required #amount="ngModel">
-        <div [hidden]="!amount.pristine" class="alert alert-danger">Amount is required</div>
-      </div>
-      <button type="submit" [disabled]="!transactionForm.form.valid" class="btn btn-info">Send</button>
     </form>
-  </div>
+  </mat-card>
 </div>

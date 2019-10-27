@@ -24,6 +24,7 @@ export class LoginComponent implements OnInit {
   password = '';
   matcher = new MyErrorStateMatcher();
   isLoadingResults = false;
+  error = '';
 
   constructor(private formBuilder: FormBuilder, private router: Router, private authenticationService: AuthenticationService) { }
 
@@ -36,13 +37,16 @@ export class LoginComponent implements OnInit {
 
   onFormSubmit(form: NgForm) {
     this.authenticationService.login(form)
-      .subscribe(res => {
-        if (res.token) {
-          sessionStorage.setItem('token', res.token);
+      .subscribe(data => {
+        if (data.token) {
+          sessionStorage.setItem('token', data.token);
           this.router.navigate(['']);
         }
-      }, (err) => {
-        console.log(err);
+      }, error => {
+        if (error.status === 401) {
+          this.error = 'Username or password is incorrect';
+        }
+
       });
   }
 
