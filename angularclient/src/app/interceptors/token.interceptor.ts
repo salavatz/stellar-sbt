@@ -10,11 +10,12 @@ import {
 import { Observable, throwError} from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import {AuthenticationService} from "../service/authentication.service";
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private authenticationService: AuthenticationService) {}
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
@@ -46,7 +47,10 @@ export class TokenInterceptor implements HttpInterceptor {
       catchError((error: HttpErrorResponse) => {
         console.log(error);
         if (error.status === 401) {
-          this.router.navigate(['login']);
+          this.authenticationService.logout();
+          if (error.error.message === 'Full authentication is required to access this resource') {
+            alert('Your session has expired, please login again');
+          }
         }
         if (error.status === 400) {
           alert(error.error);

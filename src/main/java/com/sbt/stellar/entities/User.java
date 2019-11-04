@@ -11,7 +11,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-@Table(name = "users_")
+@Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -21,19 +21,13 @@ public class User {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "email")
+    @Column(name = "email", unique = true, nullable = false)
     private String email;
 
-    @Column(name = "password")
+    @Column(name = "password", unique = true, nullable = false)
     private String password;
 
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
     private Role roles;
-
-    @Column(name = "publicKey")
-    private String publicKey;
-
-    @Column(name = "secretKey")
-    private String secretKey;
 }

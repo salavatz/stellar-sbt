@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {UserService} from "../service/user.service";
-import {User} from "../model/user";
+import {Account} from "../model/account";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-user-account',
@@ -9,12 +10,24 @@ import {User} from "../model/user";
 })
 export class UserAccountComponent implements OnInit {
 
-  users: User[];
+  displayedColumns = ['assetType', 'assetCode', 'balance']
+  account: Account;
 
-  constructor(private userService: UserService) { }
+  constructor(private userService: UserService, private router: Router) {}
 
   ngOnInit() {
-    this.userService.getAccount();
+    this.account = new Account();
+    this.userService.getAccount()
+      .subscribe(data => {
+        this.account = data;
+        console.log(data);
+      });
+  }
+
+  createAccount() {
+    this.userService.createAccount()
+      .subscribe();
+    this.router.navigate(['']);
   }
 
 }

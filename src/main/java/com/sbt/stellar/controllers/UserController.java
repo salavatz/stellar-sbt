@@ -1,11 +1,16 @@
 package com.sbt.stellar.controllers;
 
 import com.sbt.stellar.configs.JwtTokenProvider;
+import com.sbt.stellar.entities.StellarAccount;
 import com.sbt.stellar.entities.Transaction;
 import com.sbt.stellar.entities.User;
+import com.sbt.stellar.exceptions.UserAlreadyExistsException;
 import com.sbt.stellar.repositories.TransactionRepository;
 import com.sbt.stellar.services.StellarAccountService;
 import com.sbt.stellar.services.UserService;
+import com.sbt.stellar.utils.Account;
+import com.sbt.stellar.utils.Balance;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,13 +22,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.stellar.sdk.AssetTypeNative;
 import org.stellar.sdk.KeyPair;
+import org.stellar.sdk.responses.AccountResponse;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.springframework.http.ResponseEntity.ok;
 
@@ -69,7 +72,7 @@ public class UserController {
             model.put("token", token);
             return ok(model);
         } catch (AuthenticationException e) {
-            throw new BadCredentialsException("Invalid email/password supplied");
+            throw new BadCredentialsException("Username or password is incorrect");
         }
     }
 
@@ -77,7 +80,7 @@ public class UserController {
     public ResponseEntity register(@RequestBody User user) {
         User userExists = userService.getUserByEmail(user.getEmail());
         if (userExists != null) {
-            throw new BadCredentialsException("User with username: " + user.getEmail() + " already exists");
+            throw new UserAlreadyExistsException("User with username: " + user.getEmail() + " already exists");
         }
         userService.saveUser(user);
         Map<Object, Object> model = new HashMap<>();
@@ -99,29 +102,42 @@ public class UserController {
 
     @PostMapping("/transactions")
     public void sendTransaction(@RequestBody Transaction transaction) {
-        System.out.println(10123);
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User user = userService.getUserByEmail(auth.getName());
-        System.out.println("name = " + auth.getName());
+        StellarAccount stellarAccount = stellarAccountService.getStellarAccountByEmail(auth.getName());
         transactionRepository.save(transaction);
-        KeyPair recipient  = KeyPair.fromAccountId(transaction.getRecipient());
-        KeyPair sender = KeyPair.fromSecretSeed("SBGVAT5JYGEQ2LWPLOCNNIU27LNBC7N24RXGYHGNBAXNDPRINBQSRDOI");
-        //stellarAccountService.getStellarAccountByEmail(auth.getName()).getKeypair()
-        stellarAccountService.sendTransaction(new AssetTypeNative(), sender, recipient, transaction.getAmount(), "description");
+        KeyPair sender = KeyPair.fromSecretSeed(stellarAccount.getSecretKey());
+        KeyPair receiver  = KeyPair.fromAccountId(transaction.getReceiver());
+        stellarAccountService.sendTransaction(new AssetTypeNative(), sender, receiver, transaction.getAmount(), "description");
     }
 
     @GetMapping("/user/account")
-    public AccountBody getAccount() {
+    public Account getAccount() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User user = userService.getUserByEmail(auth.getName());
-        return new AccountBody(user.getPublicKey(), user.getSecretKey());
+        StellarAccount stellarAccount = stellarAccountService.getStellarAccountByEmail(auth.getName());
+        if (stellarAccount == null) {
+            return null;
+        }
+        List<Balance> balance = stellarAccountService.getAccountBalance(stellarAccount.getPublicKey());
+        //List<Balance> stub = new ArrayList<>();
+        //stub.add(new Balance("1","2","3"));
+        return new Account(stellarAccount.getPublicKey(), stellarAccount.getSecretKey(), balance);
+    }
+
+    @GetMapping("/user/create")
+    public void createAccount() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String email = auth.getName();
+        StellarAccount stellarAccount = stellarAccountService.createAccount();
+        stellarAccount.setEmail(email);
+        stellarAccountService.updateStellarAccount(stellarAccount);
     }
 
     @PostMapping("/user/add_account")
-    public void addAccount(@RequestBody AccountBody accountBody) {
+    public void addAccount(@RequestBody StellarAccount stellarAccount) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String email = auth.getName();
-        userService.updateUser(email, accountBody.getPublicKey(), accountBody.getSecretKey());
+        stellarAccount.setEmail(email);
+        stellarAccountService.updateStellarAccount(stellarAccount);
     }
 
 }

@@ -29,11 +29,11 @@ export class AuthenticationService {
   }
 
   logout(): Observable<any> {
-    sessionStorage.removeItem('token')
+    this.isLoggedIn = false;
     this.router.navigate(['login']);
+    sessionStorage.removeItem('token');
     return this.http.get<any>(apiUrl + 'logout')
       .pipe(
-        tap(_ => this.isLoggedIn = false),
         catchError(this.handleError('logout', []))
       );
   }

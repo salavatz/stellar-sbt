@@ -23,8 +23,8 @@ public class Transaction {
     @Column(name = "sender")
     private String sender;
 
-    @Column(name = "recipient")
-    private String recipient;
+    @Column(name = "receiver")
+    private String receiver;
 
     @Column(name = "amount")
     private String amount;

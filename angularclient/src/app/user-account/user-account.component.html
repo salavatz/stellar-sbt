@@ -1,34 +1,61 @@
-<div class="example-container mat-elevation-z8">
-  <div class="example-loading-shade"
-       *ngIf="isLoadingResults">
-    <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
-  </div>
-  <div class="button-row">
-    <a mat-flat-button color="primary" (click)="logout()">Logout</a>
-  </div>
-  <div class="mat-elevation-z8">
-    <table mat-table [dataSource]="data" class="example-table">
-
-      <!-- Product ID Column -->
-      <ng-container matColumnDef="prodName">
-        <th mat-header-cell *matHeaderCellDef>Product Name</th>
-        <td mat-cell *matCellDef="let row">{{row.prodName}}</td>
+<div class="example-container">
+  <mat-card class="example-card">
+    <p> Public Key: {{account.publicKey}} </p>
+    <p> Secret Key: {{account.secretKey}} </p>
+    <table mat-table [dataSource]="account.balance">
+      <ng-container matColumnDef="assetType">
+        <th mat-header-cell *matHeaderCellDef>Asset Type</th>
+        <td mat-cell *matCellDef="let element"> {{element.assetType}} </td>
       </ng-container>
-
-      <!-- ISBN Column -->
-      <ng-container matColumnDef="prodDesc">
-        <th mat-header-cell *matHeaderCellDef>Product Description</th>
-        <td mat-cell *matCellDef="let row">{{row.prodDesc}}</td>
+      <ng-container matColumnDef="assetCode">
+        <th mat-header-cell *matHeaderCellDef>Asset Code</th>
+        <td mat-cell *matCellDef="let element"> {{element.assetCode}} <p *ngIf="element.assetCode === null"> - </p></td>
       </ng-container>
-
-      <!-- Title Column -->
-      <ng-container matColumnDef="prodPrice">
-        <th mat-header-cell *matHeaderCellDef>Product Price</th>
-        <td mat-cell *matCellDef="let row">{{row.prodPrice}}</td>
+      <ng-container matColumnDef="balance">
+        <th mat-header-cell *matHeaderCellDef>Balance</th>
+        <td mat-cell *matCellDef="let element"> {{element.balance}} </td>
       </ng-container>
-
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns">
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
-  </div>
+    <br>
+    <div class="button-row">
+      <button type="button" mat-flat-button color="primary" (click)="createAccount()">Create account</button>
+    </div>
+  </mat-card>
 </div>
+
+<!--<div class="example-container mat-elevation-z8">-->
+  <!--<div class="example-loading-shade"-->
+       <!--*ngIf="isLoadingResults">-->
+    <!--<mat-spinner *ngIf="isLoadingResults"></mat-spinner>-->
+  <!--</div>-->
+  <!--<div class="button-row">-->
+    <!--<a mat-flat-button color="primary" (click)="logout()">Logout</a>-->
+  <!--</div>-->
+  <!--<div class="mat-elevation-z8">-->
+    <!--<table mat-table [dataSource]="data" class="example-table">-->
+
+      <!--&lt;!&ndash; Product ID Column &ndash;&gt;-->
+      <!--<ng-container matColumnDef="prodName">-->
+        <!--<th mat-header-cell *matHeaderCellDef>Product Name</th>-->
+        <!--<td mat-cell *matCellDef="let row">{{row.prodName}}</td>-->
+      <!--</ng-container>-->
+
+      <!--&lt;!&ndash; ISBN Column &ndash;&gt;-->
+      <!--<ng-container matColumnDef="prodDesc">-->
+        <!--<th mat-header-cell *matHeaderCellDef>Product Description</th>-->
+        <!--<td mat-cell *matCellDef="let row">{{row.prodDesc}}</td>-->
+      <!--</ng-container>-->
+
+      <!--&lt;!&ndash; Title Column &ndash;&gt;-->
+      <!--<ng-container matColumnDef="prodPrice">-->
+        <!--<th mat-header-cell *matHeaderCellDef>Product Price</th>-->
+        <!--<td mat-cell *matCellDef="let row">{{row.prodPrice}}</td>-->
+      <!--</ng-container>-->
+
+      <!--<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>-->
+      <!--<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>-->
+    <!--</table>-->
+  <!--</div>-->
+<!--</div>-->

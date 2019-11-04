@@ -1,15 +1,15 @@
 <div class="example-container">
   <mat-card class="example-card">
     <form (ngSubmit)="onSubmit()" #transactionForm="ngForm">
-      <mat-form-field class="example-full-width">
-        <input matInput type="text" [(ngModel)]="transaction.recipient" name="recipient" placeholder="Enter recipient"
-               #recipient="ngModel" [errorStateMatcher]="matcher" required>
+      <mat-form-field class="example-full-width" hideRequiredMarker>
+        <input matInput type="text" [(ngModel)]="transaction.receiver" name="receiver" placeholder="Enter receiver"
+               #receiver="ngModel" [errorStateMatcher]="matcher" required="">
         <mat-error>
-          <span *ngIf="!recipient.valid && recipient.touched">Please enter recipient</span>
+          <span *ngIf="!receiver.valid && receiver.touched">Please enter receiver</span>
         </mat-error>
       </mat-form-field>
-      <mat-form-field class="example-full-width">
-        <input matInput type="password" [(ngModel)]="transaction.amount" name="amount" placeholder="Enter your amount"
+      <mat-form-field class="example-full-width" hideRequiredMarker>
+        <input matInput type="text" [(ngModel)]="transaction.amount" name="amount" placeholder="Enter your amount"
                #amount="ngModel" [errorStateMatcher]="matcher" required>
         <mat-error>
           <span *ngIf="!amount.valid && amount.touched">Please enter amount</span>

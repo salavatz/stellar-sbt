@@ -43,10 +43,7 @@ export class LoginComponent implements OnInit {
           this.router.navigate(['']);
         }
       }, error => {
-        if (error.status === 401) {
-          this.error = 'Username or password is incorrect';
-        }
-
+        this.error = error.error.message;
       });
   }
 

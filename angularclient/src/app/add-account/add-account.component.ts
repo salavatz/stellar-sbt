@@ -17,14 +17,17 @@ export class AddAccountComponent implements OnInit {
   matcher = new MyErrorStateMatcher();
   isLoadingResults = false;
 
+  constructor(private formBuilder: FormBuilder,
+              private route: ActivatedRoute,
+              private router: Router,
+              private userService: UserService) { }
+
   ngOnInit() {
     this.addAccountForm = this.formBuilder.group({
       'publicKey' : [null, Validators.required],
       'secretKey' : [null, Validators.required]
     });
   }
-
-  constructor(private formBuilder: FormBuilder, private route: ActivatedRoute, private router: Router, private userService: UserService) { }
 
   onFormSubmit(form: NgForm) {
     this.userService.addAccount(form).subscribe( () => {

@@ -56,8 +56,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public void updateUser(String email, String publicKey, String secretKey) {
         User user = userRepository.findByEmail(email);
-        user.setPublicKey(publicKey);
-        user.setSecretKey(secretKey);
         userRepository.save(user);
     }
 }

@@ -1,4 +1,7 @@
-mat-sidenav-container, mat-sidenav-content, mat-sidenav {
+mat-sidenav-container {
+  height: 95%;
+}
+mat-sidenav-content, mat-sidenav {
   height: 100%;
 }
 
@@ -8,4 +11,7 @@ mat-sidenav {
 
 main {
   padding: 10px;
+}
+app-footer {
+  text-align: center;
 }

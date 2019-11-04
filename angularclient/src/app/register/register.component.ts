@@ -23,8 +23,9 @@ export class RegisterComponent implements OnInit {
   name = '';
   email = '';
   password = '';
-  isLoadingResults = false;
   matcher = new MyErrorStateMatcher();
+  isLoadingResults = false;
+  error = '';
 
   constructor(private formBuilder: FormBuilder, private router: Router, private authenticationService: AuthenticationService) { }
 
@@ -41,8 +42,7 @@ export class RegisterComponent implements OnInit {
       .subscribe(data => {
         this.router.navigate(['login']);
       }, error => {
-        console.log(error);
-        alert(error.error.message);
+        this.error = error.error.message;
       });
   }
 

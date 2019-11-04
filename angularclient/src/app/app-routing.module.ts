@@ -11,19 +11,18 @@ import {AddAccountComponent} from "./add-account/add-account.component";
 import {UserAccountComponent} from "./user-account/user-account.component";
 
 const routes: Routes = [
-  { path: 'users', canActivate: [AuthGuard], component: UserListComponent },
-  // { path: 'adduser', canActivate: [AuthGuard], component: UserFormComponent },
-  { path: 'login', component: LoginComponent, data: { title: 'Login' }},
-  { path: 'logout', component: LogoutComponent },
-  { path: 'transactions', canActivate: [AuthGuard], component: TransactionsComponent },
-  { path: 'register', component: RegisterComponent, data: { title: 'Register' }},
-  { path: 'user/add_account', canActivate: [AuthGuard], component: AddAccountComponent, data: { title: 'Add account' }},
-  { path: 'user/account', canActivate: [AuthGuard], component: UserAccountComponent, data: { title: 'Account' }}
+  { path: 'users', canActivate: [AuthGuard], component: UserListComponent/*, runGuardsAndResolvers: 'always' */},
+  { path: 'login', component: LoginComponent, data: { title: 'Login' }, runGuardsAndResolvers: 'always'},
+  { path: 'logout', component: LogoutComponent, runGuardsAndResolvers: 'always' },
+  { path: 'transactions', canActivate: [AuthGuard], component: TransactionsComponent/*, runGuardsAndResolvers: 'always' */},
+  { path: 'register', component: RegisterComponent, data: { title: 'Register' }/*, runGuardsAndResolvers: 'always'*/},
+  { path: 'user/add_account', canActivate: [AuthGuard], component: AddAccountComponent, data: { title: 'Add account' }/*, runGuardsAndResolvers: 'always'*/},
+  { path: 'user/account', canActivate: [AuthGuard], component: UserAccountComponent, data: { title: 'Account' }/*, runGuardsAndResolvers: 'always'*/}
   // { path: '**', redirectTo: 'adduser' }
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, {onSameUrlNavigation: 'reload'})],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

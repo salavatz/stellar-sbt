@@ -26,6 +26,7 @@
           <span *ngIf="!registerForm.get('password').valid && registerForm.get('password').touched">Please enter your password</span>
         </mat-error>
       </mat-form-field>
+      <div *ngIf="error" class="alert alert-danger">{{error}}</div>
       <div class="button-row">
         <button type="submit" [disabled]="!registerForm.valid" mat-flat-button color="primary">Register</button>
       </div>

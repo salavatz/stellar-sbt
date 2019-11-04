@@ -2,13 +2,16 @@ package com.sbt.stellar.services;
 
 import com.sbt.stellar.entities.StellarAccount;
 import com.sbt.stellar.repositories.StellarAccountRepository;
+import com.sbt.stellar.utils.Balance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.stellar.sdk.*;
 import org.stellar.sdk.responses.AccountResponse;
 
 import java.io.IOException;
-import java.util.Map;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.*;
 
 @Service
 public class StellarAccountServiceImpl implements StellarAccountService {
@@ -17,6 +20,7 @@ public class StellarAccountServiceImpl implements StellarAccountService {
     @Autowired
     private StellarAccountRepository stellarAccountRepository;
 
+    @Override
     public StellarAccount getStellarAccountByEmail(String email) {
         return stellarAccountRepository.findByEmail(email);
     }
@@ -29,6 +33,25 @@ public class StellarAccountServiceImpl implements StellarAccountService {
     @Override
     public Map<String, Object> requestFreeLumen(String accountId) {
         return null;
+    }
+
+    @Override
+    public List<Balance> getAccountBalance(String publicKey) {
+        Server server = new Server(network);
+        List<AccountResponse.Balance> balances = new ArrayList<>();
+        AccountResponse sourceAccount = null;
+        KeyPair accountKeyPair = KeyPair.fromAccountId(publicKey);
+        try {
+            sourceAccount = server.accounts().account(accountKeyPair);
+            balances.addAll(Arrays.asList(sourceAccount.getBalances()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        List<Balance> resultBalances = new ArrayList<>();
+        for (AccountResponse.Balance b: balances) {
+            resultBalances.add(new Balance(b.getAssetType(), b.getAssetCode(), b.getBalance()));
+        }
+        return resultBalances;
     }
 
     @Override
@@ -52,5 +75,28 @@ public class StellarAccountServiceImpl implements StellarAccountService {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void updateStellarAccount(StellarAccount stellarAccount) {
+        stellarAccountRepository.save(stellarAccount);
+    }
+
+    @Override
+    public StellarAccount createAccount() {
+        KeyPair pair = KeyPair.random();
+        String friendbotUrl = String.format("https://friendbot.stellar.org/?addr=%s", pair.getAccountId());
+        try {
+            InputStream response = new URL(friendbotUrl).openStream();
+            String body = new Scanner(response, "UTF-8").useDelimiter("\\A").next();
+            System.out.println("SUCCESS! You have a new account :)\n" + body);
+            response.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        StellarAccount resultStellarAccount = new StellarAccount();
+        resultStellarAccount.setPublicKey(pair.getAccountId());
+        resultStellarAccount.setSecretKey(String.valueOf(pair.getSecretSeed()));
+        return resultStellarAccount;
     }
 }
