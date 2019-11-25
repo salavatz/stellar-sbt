@@ -9,7 +9,7 @@
         </mat-error>
       </mat-form-field>
       <mat-form-field class="example-full-width" hideRequiredMarker>
-        <input matInput type="text" [(ngModel)]="transaction.amount" name="amount" placeholder="Enter your amount"
+        <input matInput type="text" [(ngModel)]="transaction.amount" name="amount" placeholder="Enter amount"
                #amount="ngModel" [errorStateMatcher]="matcher" required>
         <mat-error>
           <span *ngIf="!amount.valid && amount.touched">Please enter amount</span>

@@ -1,0 +1,71 @@
+<div class="example-container">
+  <mat-tab-group>
+    <mat-tab label="Create sell offer">
+      <mat-card class="example-card">
+        <form (ngSubmit)="onSubmitSellingOffer()" #sellOfferForm="ngForm">
+          <mat-form-field class="example-full-width" hideRequiredMarker>
+            <input matInput type="text" [(ngModel)]="offer.selling" name="selling" placeholder="Enter selling asset"
+                   #selling="ngModel" [errorStateMatcher]="matcher" required>
+            <mat-error>
+              <span *ngIf="!selling.valid && selling.touched">Please enter selling asset</span>
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field class="example-full-width" hideRequiredMarker>
+            <input matInput type="text" [(ngModel)]="offer.buying" name="buying" placeholder="Enter buying asset"
+                   #buying="ngModel" [errorStateMatcher]="matcher" required>
+            <mat-error>
+              <span *ngIf="!buying.valid && buying.touched">Please enter buying asset</span>
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field class="example-full-width" hideRequiredMarker>
+            <input matInput type="text" [(ngModel)]="offer.amount" name="amount" placeholder="Enter amount"
+                   #amount="ngModel" [errorStateMatcher]="matcher" required>
+            <mat-error>
+              <span *ngIf="!amount.valid && amount.touched">Please enter amount</span>
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field class="example-full-width" hideRequiredMarker>
+            <input matInput type="text" [(ngModel)]="offer.price" name="price" placeholder="Enter price"
+                   #price="ngModel" [errorStateMatcher]="matcher" required>
+            <mat-error>
+              <span *ngIf="!price.valid && price.touched">Please enter price</span>
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field class="example-full-width" hideRequiredMarker>
+            <input matInput type="text" [(ngModel)]="offer.memo" name="memo" placeholder="Enter memo">
+          </mat-form-field>
+          <div *ngIf="error" class="alert alert-danger">{{error}}</div>
+          <div class="button-row">
+            <button type="submit" [disabled]="!sellOfferForm.form.valid" mat-flat-button color="primary">Create</button>
+          </div>
+        </form>
+      </mat-card>
+    </mat-tab>
+    <mat-tab label="Create buy offer">
+    </mat-tab>
+    <mat-tab label="Issue asset">
+      <mat-card class="example-card">
+        <form (ngSubmit)="onSubmitIssuingAsset()" #issueAssetForm="ngForm">
+          <mat-form-field class="example-full-width" hideRequiredMarker>
+            <input matInput type="text" [(ngModel)]="codeAsset" name="code" placeholder="Enter asset code"
+                   #code="ngModel" [errorStateMatcher]="matcher" required>
+            <mat-error>
+              <span *ngIf="!code.valid && code.touched">Please enter selling asset</span>
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field class="example-full-width" hideRequiredMarker>
+            <input matInput type="text" [(ngModel)]="amountAsset" name="asset_amount" placeholder="Enter amount of asset"
+                   #asset_amount="ngModel" [errorStateMatcher]="matcher" required>
+            <mat-error>
+              <span *ngIf="!asset_amount.valid && asset_amount.touched">Please enter amount of asset</span>
+            </mat-error>
+          </mat-form-field>
+          <div *ngIf="error" class="alert alert-danger">{{error}}</div>
+          <div class="button-row">
+            <button type="submit" [disabled]="!issueAssetForm.form.valid" mat-flat-button color="primary">Create</button>
+          </div>
+        </form>
+      </mat-card>
+    </mat-tab>
+  </mat-tab-group>
+</div>

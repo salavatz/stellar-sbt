@@ -19,7 +19,7 @@
         <a *ngIf="authenticationService.isLoggedIn" routerLink="/users">History</a>
       </li>
       <li>
-        <a *ngIf="!authenticationService.isLoggedIn" routerLink="/login">Login</a>
+        <a *ngIf="authenticationService.isLoggedIn" routerLink="/offers">Offers</a>
       </li>
       <li>
         <a *ngIf="authenticationService.isLoggedIn" routerLink="/user/add_account">Add account</a>
@@ -29,6 +29,9 @@
       </li>
       <li>
         <a *ngIf="authenticationService.isLoggedIn" routerLink="/logout">LogOut</a>
+      </li>
+      <li>
+        <a *ngIf="!authenticationService.isLoggedIn" routerLink="/login">Login</a>
       </li>
     </ul>
   </div>

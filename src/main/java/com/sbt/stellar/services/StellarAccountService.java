@@ -15,5 +15,6 @@ public interface StellarAccountService {
     StellarAccount getStellarAccountByEmail(String email);
     void sendTransaction(Asset asset, KeyPair source, KeyPair destination, String amount, String transactionMemo);
     void updateStellarAccount(StellarAccount stellarAccount);
+    Map<String, String> createSellOffer(KeyPair source, Asset selling, Asset buying, String amountSell, String price, String transactionMemo);
     StellarAccount createAccount();
 }

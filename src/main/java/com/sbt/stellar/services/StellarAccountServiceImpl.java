@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.stellar.sdk.*;
 import org.stellar.sdk.responses.AccountResponse;
+import org.stellar.sdk.responses.Response;
+import org.stellar.sdk.xdr.XdrDataInputStream;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -99,4 +101,34 @@ public class StellarAccountServiceImpl implements StellarAccountService {
         resultStellarAccount.setSecretKey(String.valueOf(pair.getSecretSeed()));
         return resultStellarAccount;
     }
+
+    //1 selling = price buying,
+    @Override
+    public Map<String, String> createSellOffer(KeyPair sourceKeyPair, Asset selling, Asset buying, String amountSell, String price, String transactionMemo) {
+        Map<String, String> status = new HashMap<>();
+        Server server = new Server(network);
+        AccountResponse sourceAccount = null;
+        try {
+            sourceAccount = server.accounts().account(sourceKeyPair);
+        } catch (IOException e) {
+            status.put("status", e.getMessage());
+            return status;
+        }
+        Transaction transaction = new Transaction.Builder(sourceAccount, Network.TESTNET)
+                .addOperation(new ManageSellOfferOperation.Builder(selling, buying, amountSell, price)
+                        .setOfferId(0).build())
+                .setOperationFee(100)
+                .addMemo(Memo.text(transactionMemo)).setTimeout(1000).build();
+        transaction.sign(sourceKeyPair);
+        try {
+            Response response = server.submitTransaction(transaction);
+            System.out.println(response);
+            status.put("status", "success");
+        } catch (IOException e) {
+            status.put("status", e.getMessage());
+            return status;
+        }
+        return status;
+    }
+
 }

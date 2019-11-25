@@ -25,6 +25,7 @@ import {MatInputModule,
   MatIconModule,
   MatButtonModule,
   MatCardModule,
+  MatTabsModule,
   MatFormFieldModule } from '@angular/material';
 import {MaterialModule} from "./material/material.module";
 import { LayoutComponent } from './layout/layout.component';
@@ -33,6 +34,7 @@ import { SidenavListComponent } from './navigation/sidenav-list/sidenav-list.com
 import { AddAccountComponent } from './add-account/add-account.component';
 import { UserAccountComponent } from './user-account/user-account.component';
 import {JWT_OPTIONS, JwtHelperService} from "@auth0/angular-jwt";
+import { OffersComponent } from './offers/offers.component';
 
 @NgModule({
   declarations: [
@@ -48,7 +50,8 @@ import {JWT_OPTIONS, JwtHelperService} from "@auth0/angular-jwt";
     LayoutComponent,
     SidenavListComponent,
     AddAccountComponent,
-    UserAccountComponent
+    UserAccountComponent,
+    OffersComponent
   ],
   imports: [
     BrowserModule,
@@ -67,6 +70,7 @@ import {JWT_OPTIONS, JwtHelperService} from "@auth0/angular-jwt";
     MatCardModule,
     MatFormFieldModule,
     MaterialModule,
+    MatTabsModule,
     FlexLayoutModule
   ],
   providers: [

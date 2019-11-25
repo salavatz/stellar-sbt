@@ -10,6 +10,8 @@ import com.sbt.stellar.services.StellarAccountService;
 import com.sbt.stellar.services.UserService;
 import com.sbt.stellar.utils.Account;
 import com.sbt.stellar.utils.Balance;
+import com.sbt.stellar.utils.IssuingAsset;
+import com.sbt.stellar.utils.Offer;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeNative;
 import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.responses.AccountResponse;
@@ -28,6 +31,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 import java.util.*;
 
+import static org.springframework.http.ResponseEntity.of;
 import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
@@ -101,13 +105,35 @@ public class UserController {
     }
 
     @PostMapping("/transactions")
-    public void sendTransaction(@RequestBody Transaction transaction) {
+    public void sendSellOfferTransaction(@RequestBody Transaction transaction) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         StellarAccount stellarAccount = stellarAccountService.getStellarAccountByEmail(auth.getName());
         transactionRepository.save(transaction);
         KeyPair sender = KeyPair.fromSecretSeed(stellarAccount.getSecretKey());
         KeyPair receiver  = KeyPair.fromAccountId(transaction.getReceiver());
         stellarAccountService.sendTransaction(new AssetTypeNative(), sender, receiver, transaction.getAmount(), "description");
+    }
+
+    @PostMapping("/offers/create_sell_offer")
+    public void sendTransaction(@RequestBody Offer offer) {
+        System.out.println(offer);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        StellarAccount stellarAccount = stellarAccountService.getStellarAccountByEmail(auth.getName());
+        KeyPair sourceKeyPair = KeyPair.fromSecretSeed(stellarAccount.getSecretKey());
+        Asset selling = new AssetTypeNative();
+        Asset buying = new AssetTypeNative();
+        if("LUMENS".equalsIgnoreCase(offer.getSelling())) {
+            selling = Asset.createNonNativeAsset(offer.getSelling(), sourceKeyPair);
+        }
+        if ("LUMENS".equalsIgnoreCase(offer.getBuying())) {
+            buying = Asset.createNonNativeAsset(offer.getBuying(), sourceKeyPair);
+        }
+        stellarAccountService.createSellOffer(sourceKeyPair, selling, buying, offer.getAmount(), offer.getPrice(), offer.getMemo());
+    }
+
+    @PostMapping("/offers/create_asset")
+    public void issueAsset(@RequestBody IssuingAsset issuingAsset) {
+        System.out.println(issuingAsset);
     }
 
     @GetMapping("/user/account")
